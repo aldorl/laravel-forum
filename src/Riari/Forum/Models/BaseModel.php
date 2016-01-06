@@ -2,9 +2,9 @@
 
 use Cache;
 use Carbon\Carbon;
-use Eloquent;
+use Illuminate\Database\Eloquent\Model;
 
-abstract class BaseModel extends Eloquent {
+abstract class BaseModel extends Model {
 
     /*
     |--------------------------------------------------------------------------
