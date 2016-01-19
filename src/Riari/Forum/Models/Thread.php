@@ -1,21 +1,26 @@
 <?php namespace Riari\Forum\Models;
 
 use DB;
-use Illuminate\Database\Eloquent\SoftDeletes;
+// use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 use Riari\Forum\Libraries\AccessControl;
 use Riari\Forum\Libraries\Alerts;
 use Riari\Forum\Libraries\Utils;
-use Riari\Forum\Models\Traits\HasAuthor;
+use Riari\Forum\Models\Traits\HasCustomAuthor;
+use App\Models\Content;
 
-class Thread extends BaseModel {
+// class Thread extends BaseModel {
+class Thread extends Content {
 
-    use SoftDeletes, HasAuthor;
+    // use SoftDeletes, HasAuthor;
+    use HasCustomAuthor;
 
     // Eloquent properties
-    protected $table         = 'forum_threads';
+    // protected $table         = 'forum_threads';
+    protected static $singleTableType = 'thread';
     public    $timestamps    = true;
-    protected $dates         = ['created_at', 'updated_at', 'deleted_at'];
+    // protected $dates         = ['created_at', 'updated_at', 'deleted_at'];
+    protected $dates         = ['created_at', 'updated_at'];
     protected $appends       = ['lastPage', 'lastPost', 'lastPostRoute', 'route', 'lockRoute', 'pinRoute', 'replyRoute', 'deleteRoute'];
     protected $guarded       = ['id'];
     protected $with          = ['readers'];
@@ -24,16 +29,19 @@ class Thread extends BaseModel {
     const     STATUS_UNREAD  = 'unread';
     const     STATUS_UPDATED = 'updated';
 
+    // Single Inheritance Table contstants
+    const     VIEW_COUNT     = 0;
+
     /*
     |--------------------------------------------------------------------------
     | Relationships
     |--------------------------------------------------------------------------
     */
 
-    public function category()
-    {
-        return $this->belongsTo('\Riari\Forum\Models\Category', 'parent_category');
-    }
+    // public function category()
+    // {
+    //     return $this->belongsTo('\Riari\Forum\Models\Category', 'parent_category');
+    // }
 
     public function readers()
     {
@@ -135,7 +143,8 @@ class Thread extends BaseModel {
 
     public function getViewCountAttribute()
     {
-        return $this->attributes['view_count'];
+        // return $this->attributes['view_count'];
+        return json_decode($this->data, true)[self::VIEW_COUNT];
     }
 
     // Current user: reader attributes
@@ -218,10 +227,13 @@ class Thread extends BaseModel {
     protected function getRouteComponents()
     {
         $components = array(
-            'categoryID'    => $this->category->id,
-            'categoryAlias' => Str::slug($this->category->title, '-'),
+            // 'categoryID'    => $this->category->id,
+            // 'categoryAlias' => Str::slug($this->category->title, '-'),
+            'categoryID'    => '9',
+            'categoryAlias' => 'global',
             'threadID'      => $this->id,
-            'threadAlias'   => Str::slug($this->title, '-')
+            // 'threadAlias'   => Str::slug($this->title, '-')
+            'threadAlias'   => Str::slug($this->name, '-')
         );
 
         return $components;
@@ -248,5 +260,80 @@ class Thread extends BaseModel {
 
         Alerts::add('success', trans('forum::base.thread_updated'));
     }
+
+
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Attributes
+    |--------------------------------------------------------------------------
+    */
+
+    public function getPostedAttribute()
+    {
+        return $this->getTimeAgo($this->created_at);
+    }
+
+    public function getUpdatedAttribute()
+    {
+        return $this->getTimeAgo($this->updated_at);
+    }
+
+    protected function rememberAttribute($item, $function)
+    {
+        $cacheItem = get_class($this).$this->id.$item;
+
+        $value = Cache::remember($cacheItem, config('forum.preferences.cache_lifetime'), $function);
+
+        return $value;
+    }
+
+    protected static function clearAttributeCache($model)
+    {
+        foreach ($model->appends as $attribute) {
+            $cacheItem = get_class($model).$model->id.$attribute;
+            Cache::forget($cacheItem);
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Helpers
+    |--------------------------------------------------------------------------
+    */
+
+    // Returns true if this model has been updated since the given model
+    public function updatedSince(&$model)
+    {
+        return ($this->updated_at > $model->updated_at);
+    }
+
+    // Returns route components for building routes
+    // protected function getRouteComponents()
+    // {
+    //     $components = array();
+    //     return $components;
+    // }
+
+    // Returns a route using the current set route components
+    protected function getRoute($name, $components = array())
+    {
+        return route($name, array_merge($this->getRouteComponents(), $components));
+    }
+
+    // Returns a human readable diff of the given timestamp
+    protected function getTimeAgo($timestamp)
+    {
+        return Carbon::createFromTimeStamp(strtotime($timestamp))->diffForHumans();
+    }
+
+    // Toggles a property (column) on the model and saves it
+    // public function toggle($property)
+    // {
+    //     $this->$property = !$this->$property;
+    //     $this->save();
+    // }
 
 }

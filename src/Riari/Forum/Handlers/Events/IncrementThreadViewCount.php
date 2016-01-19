@@ -34,8 +34,8 @@ class IncrementThreadViewCount implements ShouldBeQueued {
         if (!$this->isThreadViewed($event->thread))
         {
             $event->thread->timestamps = false;
-            $event->thread->increment('view_count');
-
+            // $event->thread->increment('view_count');
+            $event->thread->incrementViewCount();
             $this->markThreadViewed($event->thread);
         }
 
