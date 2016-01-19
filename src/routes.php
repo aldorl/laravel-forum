@@ -7,6 +7,7 @@ Route::get($root, $controller . '@getViewIndex');
 Route::group(['prefix' => $root], function() use ($controller)
 {
 	$category = '{categoryID}-{categoryAlias}';
+	// $category = '9-global';
 	$thread = '/{threadID}-{threadAlias}';
 
 	Route::get('new', ['as' => 'forum.get.new', 'uses' => $controller . '@getViewNew']);
