@@ -1,7 +1,7 @@
 <?php namespace Riari\Forum\Models;
 
 use DB;
-// use Illuminate\Database\Eloquent\SoftDeletes;
+// use Illuminate\Database\Eloquent\SoftDeletes; 
 use Illuminate\Support\Str;
 use Riari\Forum\Libraries\AccessControl;
 use Riari\Forum\Libraries\Alerts;
