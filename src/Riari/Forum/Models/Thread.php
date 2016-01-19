@@ -1,7 +1,7 @@
 <?php namespace Riari\Forum\Models;
 
 use DB;
-// use Illuminate\Database\Eloquent\SoftDeletes; 
+// use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 use Riari\Forum\Libraries\AccessControl;
 use Riari\Forum\Libraries\Alerts;
@@ -217,6 +217,14 @@ class Thread extends Content {
     {
         return $this->userCanDelete;
     }
+
+    public function incrementViewCount()
+	{
+		$json = json_decode($this->data, true);
+		$json[self::VIEW_COUNT] += 1;
+		$this->data = json_encode($json);
+		return $this->save();
+	}
 
     /*
     |--------------------------------------------------------------------------
