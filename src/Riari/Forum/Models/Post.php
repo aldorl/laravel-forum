@@ -47,7 +47,9 @@ class Post extends BaseModel {
 
     public function getEditRouteAttribute()
     {
+        // dd($this->getRoute('forum.get.edit.post'));
         return $this->getRoute('forum.get.edit.post');
+        // return "edit_post";
     }
 
     public function getDeleteRouteAttribute()
@@ -86,12 +88,16 @@ class Post extends BaseModel {
     protected function getRouteComponents()
     {
         $components = array(
-            'categoryID'    => $this->thread->category->id,
-            'categoryAlias' => Str::slug($this->thread->category->title, '-'),
+            // 'categoryID'    => $this->thread->category->id,
+            // 'categoryAlias' => Str::slug($this->thread->category->title, '-'),
             'threadID'      => $this->thread->id,
-            'threadAlias'   => Str::slug($this->thread->title, '-'),
+            // 'threadAlias'   => Str::slug($this->thread->title, '-'),
             'postID'        => $this->id
         );
+        // NOTE - the following lines are added to asimilate with the Single Table Inheritance
+        $components['categoryID'] = '9';
+        $components['categoryAlias'] = 'global';
+        $components['threadAlias'] = Str::slug($this->thread->name, '-');
 
         return $components;
     }
