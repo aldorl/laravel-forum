@@ -164,9 +164,12 @@ abstract class BaseController extends Controller {
         if ($thread_valid && $post_valid)
         {
             $thread = array(
-                'author_id'       => $user->id,
-                'parent_category' => $categoryID,
-                'title'           => Input::get('title')
+                'owner_id'          => $user->id,
+                // 'parent_category'   => $categoryID,
+                'divisions'         => '|'.Input::get('division_selection').'|',
+                'data'              => json_encode([1]), // view_count
+                'name'              => Input::get('title'),
+                'status_flag'       => 0
             );
 
             $thread = $this->threads->create($thread);
