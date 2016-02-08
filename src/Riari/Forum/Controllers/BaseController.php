@@ -169,6 +169,7 @@ abstract class BaseController extends Controller {
                 'divisions'         => '|'.Input::get('division_selection').'|',
                 'data'              => json_encode([1]), // view_count
                 'name'              => Input::get('title'),
+                'description'       => Input::get('content'),
                 'status_flag'       => 0
             );
 
