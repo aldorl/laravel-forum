@@ -249,6 +249,9 @@ abstract class BaseController extends Controller {
 
             $post->thread->touch();
 
+
+            $this->threads->getTimeAgo();
+
             Alerts::add('success', trans('forum::base.reply_added'));
 
             return Redirect::to($this->collections['thread']->lastPostRoute);
