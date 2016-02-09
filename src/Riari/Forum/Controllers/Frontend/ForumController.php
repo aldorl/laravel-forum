@@ -1,4 +1,4 @@
-<?php namespace App\Http\Controllers\Frontend;
+<?php namespace Riari\Forum\Controllers;
 use App;
 use Config;
 use Event;
@@ -33,20 +33,7 @@ use App\Http\Components\Search;
  */
 class ForumController extends BaseController
 {
-	public function getViewAllThreads()
-	{
-			// $threads = Thread::orderBy('updated_at', 'desc')->simplePaginate(10);
-			$results = Search::queryDiscussions();
-			$results_hits = $results['hits'];
-			$threads = Search::formatElasticSearchToArray($results_hits);
-
-			$categories = Category::all();
-
-			$allDivisions = Division::all();
-
-
-			return View::make('forum::all_threads', compact('threads', 'categories','allDivisions'));
-	}
+	
 	protected function makeView($name)
 	{
 		$allDivisions = Division::all();
