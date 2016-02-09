@@ -250,7 +250,7 @@ abstract class BaseController extends Controller {
             $post->thread->touch();
 
 
-            $this->threads->getTimeAgo();
+            $this->thread->getTimeAgo();
 
             Alerts::add('success', trans('forum::base.reply_added'));
 
