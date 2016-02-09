@@ -17,6 +17,12 @@ use Riari\Forum\Libraries\Validation;
 use Route;
 use View;
 use Validator;
+use Auth;
+use App\Models\Division;
+use Riari\Forum\Models\Thread;
+use Riari\Forum\Models\Category;
+use Riari\Forum\Controllers\BaseController;
+use App\Http\Components\Search;
 
 abstract class BaseController extends Controller {
 
@@ -45,6 +51,20 @@ abstract class BaseController extends Controller {
             }
         }
     }
+    public function getViewAllThreads()
+	{
+			// $threads = Thread::orderBy('updated_at', 'desc')->simplePaginate(10);
+			$results = Search::queryDiscussions();
+			$results_hits = $results['hits'];
+			$threads = Search::formatElasticSearchToArray($results_hits);
+
+			$categories = Category::all();
+
+			$allDivisions = Division::all();
+
+
+			return View::make('forum::all_threads', compact('threads', 'categories','allDivisions'));
+	}
 
     protected function load($select = array(), $with = array())
     {
