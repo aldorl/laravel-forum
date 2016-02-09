@@ -9,8 +9,8 @@ Route::group(['prefix' => $root], function() use ($controller)
 	$category = '{categoryID}-{categoryAlias}';
 	// $category = '9-global';
 	$thread = '/{threadID}-{threadAlias}';
-    
-    Route::get('forum/all_threads', ['as' => 'all_threads',uses' => $controller . '@getViewAllThreads']);
+
+    Route::get('forum/all_threads', ['as' => 'all_threads','uses' => $controller . '@getViewAllThreads']);
     Route::get('new', ['as' => 'forum.get.new', 'uses' => $controller . '@getViewNew']);
 	Route::get('new', ['as' => 'forum.get.new', 'uses' => $controller . '@getViewNew']);
 	Route::post('new/read', ['as' => 'forum.post.mark.read', 'uses' => $controller . '@postMarkAsRead']);
