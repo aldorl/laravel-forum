@@ -174,7 +174,7 @@ abstract class BaseController extends Controller {
         return $this->makeView('forum::thread-create');
     }
 
-    public function connectCreateThread($categoryID, $categoryAlias,$id)
+    public function getConnectCreateThread($categoryID, $categoryAlias,$id)
     {
         $this->load(['category' => $categoryID]);
 
@@ -223,6 +223,56 @@ abstract class BaseController extends Controller {
             return Redirect::to($this->collections['category']->newThreadRoute)->withInput();
         }
     }
+    public function postConnectCreateThread($categoryID, $categoryAlias,$contentId)
+    {
+        $user = Utils::getCurrentUser();
+
+        $this->load(['category' => $categoryID]);
+
+        $thread_valid = Validation::check('thread');
+        $post_valid = Validation::check('post');
+        if ($thread_valid && $post_valid)
+        {
+            $thread = array(
+                'owner_id'          => $user->id,
+                // 'parent_category'   => $categoryID,
+                'divisions'         => '|'.Input::get('division_selection').'|',
+                'data'              => json_encode([1]), // view_count
+                'name'              => Input::get('title'),
+                'description'       => Input::get('content'),
+                'status_flag'       => 0
+            );
+
+            $thread = $this->threads->create($thread);
+            if($item['subclass']=='publication'){
+                    $follower_type="P";
+                } else {
+                    $follower_type="A";
+                };
+
+                $item->connectToDiscussion()->attach($contentId, [
+                        'follower_type' => $follower_type, 'followed_type' => 'T','followed_id' => $thread->id
+                    ]);
+
+
+            $post = array(
+                'parent_thread'   => $thread->id,
+                'author_id'       => $user->id,
+                'content'         => Input::get('content')
+            );
+
+            $this->posts->create($post);
+
+            Alerts::add('success', trans('forum::base.thread_created'));
+
+            return Redirect::to($thread->route);
+        }
+        else
+        {
+            return Redirect::to($this->collections['category']->newThreadRoute)->withInput();
+        }
+    }
+
 
     public function getReplyToThread($categoryID, $categoryAlias, $threadID, $threadAlias)
     {
