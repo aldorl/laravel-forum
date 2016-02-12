@@ -244,8 +244,8 @@ abstract class BaseController extends Controller {
             );
 
             $thread = $this->threads->create($thread);
-            
-            $item = Content::where('id',$id)->first();
+
+            $item = Content::where('id',$contentId)->first();
             if($item['subclass']=='publication'){
                     $follower_type="P";
                 } else {
