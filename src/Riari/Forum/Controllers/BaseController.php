@@ -23,6 +23,7 @@ use Riari\Forum\Models\Thread;
 use Riari\Forum\Models\Category;
 use Riari\Forum\Controllers\BaseController;
 use App\Http\Components\Search;
+use App\Models\Content;
 
 abstract class BaseController extends Controller {
 
@@ -182,7 +183,7 @@ abstract class BaseController extends Controller {
         $content=$item['url'];
         return $this->makeView('forum::thread-create')->with(array('content' => $content, 'title' => $title));
     }
-    
+
     public function postCreateThread($categoryID, $categoryAlias)
     {
         $user = Utils::getCurrentUser();
