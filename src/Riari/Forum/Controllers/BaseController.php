@@ -173,6 +173,16 @@ abstract class BaseController extends Controller {
         return $this->makeView('forum::thread-create');
     }
 
+    public function connectCreateThread($categoryID, $categoryAlias,$id)
+    {
+        $this->load(['category' => $categoryID]);
+
+        $item = Content::where('id',$id)->first();
+        $title=$item['name'];
+        $content=$item['url'];
+        return $this->makeView('forum::thread-create')->with(array('content' => $content, 'title' => $title));
+    }
+    
     public function postCreateThread($categoryID, $categoryAlias)
     {
         $user = Utils::getCurrentUser();

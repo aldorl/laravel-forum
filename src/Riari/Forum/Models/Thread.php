@@ -332,7 +332,7 @@ class Thread extends Content {
     }
 
     // Returns a human readable diff of the given timestamp
-    public function getTimeAgo($timestamp)
+    protected function getTimeAgo($timestamp)
     {
         return Carbon::createFromTimeStamp(strtotime($timestamp))->diffForHumans();
     }
