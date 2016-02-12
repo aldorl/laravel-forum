@@ -170,8 +170,8 @@ abstract class BaseController extends Controller {
     public function getCreateThread($categoryID, $categoryAlias)
     {
         $this->load(['category' => $categoryID]);
-
-        return $this->makeView('forum::thread-create');
+        $contentId='';
+        return $this->makeView('forum::thread-create')->with(array('contentId' => $contentId));
     }
 
     public function getConnectCreateThread($categoryID, $categoryAlias,$id)
@@ -181,7 +181,7 @@ abstract class BaseController extends Controller {
         $item = Content::where('id',$id)->first();
         $title=$item['name'];
         $content=$item['url'];
-        return $this->makeView('forum::thread-create')->with(array('content' => $content, 'title' => $title));
+        return $this->makeView('forum::thread-create')->with(array('content' => $content, 'title' => $title,'contentId' => $contentId));
     }
 
     public function postCreateThread($categoryID, $categoryAlias)
