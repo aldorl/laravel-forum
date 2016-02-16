@@ -170,7 +170,7 @@ abstract class BaseController extends Controller {
     public function getCreateThread($categoryID, $categoryAlias)
     {
         $this->load(['category' => $categoryID]);
-
+        
         return $this->makeView('forum::thread-create');
     }
 
