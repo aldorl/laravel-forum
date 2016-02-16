@@ -170,7 +170,7 @@ abstract class BaseController extends Controller {
     public function getCreateThread($categoryID, $categoryAlias)
     {
         $this->load(['category' => $categoryID]);
-        
+
         return $this->makeView('forum::thread-create');
     }
 
@@ -192,12 +192,17 @@ abstract class BaseController extends Controller {
 
         $thread_valid = Validation::check('thread');
         $post_valid = Validation::check('post');
+        if(! empty(Input::get('division_selection'))){
+            $division='|'.Input::get('division_selection').'|';
+        } else {
+            $division=null;
+        };
         if ($thread_valid && $post_valid)
         {
             $thread = array(
                 'owner_id'          => $user->id,
                 // 'parent_category'   => $categoryID,
-                'divisions'         => '|'.Input::get('division_selection').'|',
+                'divisions'         => $division,
                 'data'              => json_encode([1]), // view_count
                 'name'              => Input::get('title'),
                 'description'       => Input::get('content'),
