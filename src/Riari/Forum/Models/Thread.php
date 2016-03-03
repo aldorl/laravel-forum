@@ -237,8 +237,8 @@ class Thread extends Content {
         $components = array(
             // 'categoryID'    => $this->category->id,
             // 'categoryAlias' => Str::slug($this->category->title, '-'),
-            'categoryID'    => '9',
-            'categoryAlias' => 'global',
+            'categoryID'    => '7',
+            'categoryAlias' => 'category',
             'threadID'      => $this->id,
             // 'threadAlias'   => Str::slug($this->title, '-')
             'threadAlias'   => Str::slug($this->name, '-')

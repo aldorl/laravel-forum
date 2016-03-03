@@ -95,8 +95,8 @@ class Post extends BaseModel {
             'postID'        => $this->id
         );
         // NOTE - the following lines are added to asimilate with the Single Table Inheritance
-        $components['categoryID'] = '9';
-        $components['categoryAlias'] = 'global';
+        $components['categoryID'] = '7';
+        $components['categoryAlias'] = 'category';
         $components['threadAlias'] = Str::slug($this->thread->name, '-');
 
         return $components;
